@@ -2,7 +2,7 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-export default function SignIn() {
+export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -12,13 +12,13 @@ export default function SignIn() {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!formData.email || !formData.password){
+    if(!formData.username || !formData.email || !formData.password){
       return setErrorMessage('Llene todos los espacios')
     }
     try{
       setLoading(true);
       setErrorMessage(null);
-      const res = await fetch('/api/auth/signin', {
+      const res = await fetch('/api/auth/signup', {
         method: 'Post',
         headers: { 'Content-Type': 'application/json'},
         body: JSON.stringify(formData),
@@ -29,7 +29,7 @@ export default function SignIn() {
       }
       setLoading(false);
       if(res.ok){
-        navigate("/");
+        navigate('/sign-in');
       }
     }catch(error){
       setErrorMessage(error.message);
@@ -42,6 +42,12 @@ export default function SignIn() {
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
         <div className='flex-1'>
           <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+            <div className=''>
+              <Label value='Tu nombre de usuario'/>
+              <TextInput
+                type='text' placeholder='Username' id='username' onChange={handleChange}
+              />
+            </div>
             <div className=''>
               <Label value='Tu email'/>
               <TextInput
@@ -61,14 +67,14 @@ export default function SignIn() {
                   <Spinner size='sm'/>
                   <span className='pl-3'>Loading...</span>
                 </>
-                ): 'Sign In'
+                ): 'Sign Up'
               }
             </Button>
           </form>
           <div className='flex gap-2 text-sm mt-5'>
-            <span>Si no tienes una cuenta </span>
-            <Link className='text-blue-500' to="/sign-up">
-              Crea una
+            <span>Tienes una cuenta?</span>
+            <Link className='text-blue-500' to="/sign-in">
+              Sign In
             </Link>
             <div>
               {
@@ -86,3 +92,4 @@ export default function SignIn() {
     </div>
   )
 }
+
